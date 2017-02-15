@@ -1,5 +1,6 @@
 package com.example.tom.pictureapp2;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,12 +13,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleCursorAdapter;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 //外部儲存是危險權限 需先要求權限的程式碼
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
     //定義一個int常數 代表向使用者邀求讀取聯絡人的辨識編號
     private static final int REQUEST_READ_STORAGE = 3;
     //GridView 元件使用的 SimpleCursorAdapter 時 其Cursor參數會先使用null值
@@ -123,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //參數 this 應該給的是LoaderManager 請將游標停在該處錯誤的地方
         //按alt+enter 選擇Make MainActivity... 實作Loader Manager介面
         getSupportLoaderManager().initLoader(0,null,this);
+        //項目點擊事件處理器
+        //參數this 因為不是一個OnItemClickedListener而出現錯誤
+        //按alt+enter 選擇Make MainActivity... 實作方法
+        grid.setOnItemClickListener(this);
 
     }
 
@@ -147,4 +154,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //產生開啟DetailActivity的Intent意圖物件
+        Intent intent = new Intent(this,DetailActivity.class);
+        //將目前點擊的項目位置放入Intent
+        intent.putExtra("POSITION",position);
+        //開啟DetailActivity活動
+        startActivity(intent);
+    }
 }
